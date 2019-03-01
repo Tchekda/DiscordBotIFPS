@@ -3,6 +3,8 @@ import re
 
 import discord
 import requests
+
+from aiohttp.connector import ProxyConnector, BaseConnector
 from bs4 import BeautifulSoup
 
 
@@ -10,8 +12,12 @@ def run():
     if not os.environ['DISCORD_TOKEN']:
         print('No defined Token in environnement : DISCORD_TOKEN')
         exit(0)
+    if 'PROD' in os.environ:
+        connector = ProxyConnector(proxy="http://proxy.server:3128")
+    else:
+        connector = None
     TOKEN = os.environ['DISCORD_TOKEN']
-    client = discord.Client()
+    client = discord.Client(connector=connector)
 
     @client.event
     async def on_message(message):
