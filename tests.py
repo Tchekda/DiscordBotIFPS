@@ -9,7 +9,7 @@ import bot
 class BotTest(unittest.TestCase):
 
     def setUp(self):
-        pass
+        self.name = "BotIFPS"
 
     def test_environ(self):
         self.assertIn('DISCORD_TOKEN', os.environ)
@@ -20,7 +20,7 @@ class BotTest(unittest.TestCase):
         @client.event
         async def on_ready():
             await client.close()
-            self.assertEqual(client.user.name, 'BotIFPS')
+            self.assertEqual(client.user.name, self.name)
 
         client.run(os.environ['DISCORD_TOKEN'])
 
