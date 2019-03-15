@@ -6,6 +6,18 @@ import requests
 from bs4 import BeautifulSoup
 
 
+def validate_fpl(text):
+    req = requests.post("http://validation.eurofpl.eu/", data={'freeEntry': text})
+    data = BeautifulSoup(req.text, features="html.parser")
+    for span in data.find_all('span', 'ifpuv_result'):
+        if span.get_text() == 'NO ERRORS':
+            # print('Success : No Errors')
+            return True
+        else:
+            # print("Error : ", span.get_text())
+            return span.get_text()
+
+
 def run():
     if not os.environ['DISCORD_TOKEN']:
         print('No defined Token in environnement : DISCORD_TOKEN')
@@ -40,17 +52,6 @@ def run():
     async def on_ready():
         print('Logged in as %s with ID %s' % (client.user.name, client.user.id))
         await client.change_presence(game=discord.Game(name='Vérifier vos plans de vols'))
-
-    def validate_fpl(text):
-        req = requests.post("http://validation.eurofpl.eu/", data={'freeEntry': text})
-        data = BeautifulSoup(req.text, features="html.parser")
-        for span in data.find_all('span', 'ifpuv_result'):
-            if span.get_text() == 'NO ERRORS':
-                print('Success : No Errors')
-                return True
-            else:
-                print("Error : ", span.get_text())
-                return span.get_text()
 
     client.run(TOKEN)
 
