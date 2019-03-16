@@ -4,3 +4,9 @@ python:
 install:
   - pip install -rrequirements.txt
 script: python -m unittest
+notifications:
+  email:
+    recipients:
+      - contact@tchekda.fr
+    on_success: never # default: change
+    on_failure: always # default: always
